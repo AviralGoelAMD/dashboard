@@ -26,6 +26,30 @@
     .header-left h1 { font-size: 1.4rem; font-weight: 700; color: #f1f5f9; }
     .header-left p  { font-size: 0.82rem; color: #64748b; margin-top: 2px; }
 
+    #next-holiday {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px !important;
+      font-size: 0.75rem !important;
+      color: #4b5563 !important;
+    }
+    #next-holiday .nh-dot {
+      width: 7px; height: 7px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    #next-holiday .nh-days {
+      font-weight: 700;
+      color: #818cf8;
+    }
+    #next-holiday .nh-name {
+      color: #94a3b8;
+    }
+    #next-holiday .nh-date {
+      color: #4b5563;
+    }
+
     #add-btn {
       background: #4f46e5;
       color: white;
@@ -288,32 +312,32 @@
 
     /* ── Stock Widget ────────────────────────── */
     .stock-price {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #f1f5f9;
-      letter-spacing: -0.02em;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: -0.01em;
       line-height: 1;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .stock-change {
-      font-size: 0.82rem;
-      font-weight: 600;
+      font-size: 0.75rem;
+      font-weight: 500;
     }
-    .stock-change.up   { color: #10b981; }
-    .stock-change.down { color: #f87171; }
+    .stock-change.up   { color: #6ee7b7; }
+    .stock-change.down { color: #fca5a5; }
 
     .stock-meta {
-      font-size: 0.7rem;
-      color: #4b5563;
-      margin-top: 6px;
+      font-size: 0.65rem;
+      color: #374151;
+      margin-top: 4px;
     }
 
     .stock-bar-wrap {
-      margin-top: 12px;
-      background: #2a2d3e;
+      margin-top: 8px;
+      background: #1e2130;
       border-radius: 4px;
-      height: 4px;
+      height: 3px;
       overflow: hidden;
     }
 
@@ -321,6 +345,84 @@
       height: 100%;
       border-radius: 4px;
       transition: width 0.4s;
+      opacity: 0.5;
+    }
+
+    /* ── Year Calendar ───────────────────────── */
+    .hcal-legend {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .hcal-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      color: #4b5563;
+    }
+    .hcal-legend-dot {
+      width: 9px; height: 9px;
+      border-radius: 3px;
+    }
+
+    .hcal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px 32px;
+    }
+
+    .hcal-month-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 8px;
+      letter-spacing: 0.04em;
+    }
+
+    .hcal-dow-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      margin-bottom: 4px;
+    }
+    .hcal-dow-row span {
+      font-size: 0.65rem;
+      text-align: center;
+      color: #374151;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .hcal-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
+
+    .hcal-day {
+      font-size: 0.75rem;
+      text-align: center;
+      line-height: 26px;
+      height: 26px;
+      border-radius: 5px;
+      color: #4b5563;
+      cursor: default;
+      font-variant-numeric: tabular-nums;
+    }
+    .hcal-blank { visibility: hidden; }
+
+    .hcal-holiday {
+      color: #0f1117;
+      font-weight: 700;
+      cursor: default;
+    }
+
+    .hcal-today {
+      background: #4f46e5 !important;
+      color: #fff !important;
+      font-weight: 700;
+      box-shadow: 0 0 0 2px #4f46e580;
     }
 
 
@@ -462,6 +564,7 @@
   <div class="header-left">
     <h1>Dashboard</h1>
     <p id="greeting"></p>
+    <p id="next-holiday"></p>
   </div>
   <div class="header-actions">
     <button id="settings-btn" title="Settings">⚙</button>
@@ -480,17 +583,17 @@
   <!-- Sidebar -->
   <div class="sidebar">
 
-    <!-- Stock Ticker -->
-    <a class="widget" id="stock-widget" href="https://finance.yahoo.com/quote/AMD" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:block;">
-      <div class="widget-title" style="margin-bottom:10px">AMD · NASDAQ</div>
-      <div id="stock-body"><div style="color:#4b5563;font-size:0.82rem">Loading…</div></div>
-    </a>
-
     <!-- World Clock -->
     <div class="widget">
       <div class="widget-title">World Clock</div>
       <div class="clock-grid" id="clocks"></div>
     </div>
+
+    <!-- Stock Ticker -->
+    <a class="widget" id="stock-widget" href="https://finance.yahoo.com/quote/AMD" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:block;">
+      <div class="widget-title" style="margin-bottom:8px">AMD · NASDAQ</div>
+      <div id="stock-body"><div style="color:#374151;font-size:0.78rem">Loading…</div></div>
+    </a>
 
   </div>
 </div>
@@ -502,6 +605,12 @@
     <button id="pr-refresh">↻ Refresh</button>
   </div>
   <div id="pr-list"><div class="pr-status-msg">Loading…</div></div>
+</div>
+
+<!-- Holidays Timeline -->
+<div id="holidays-section" class="widget" style="margin-top:24px;">
+  <div class="widget-title" style="margin-bottom:16px">2026 AMD Holidays</div>
+  <div id="holidays-body"></div>
 </div>
 
 <!-- Modal -->
@@ -549,7 +658,46 @@
 
 <script>
 // ── Constants ────────────────────────────────────────────────
-const COLORS = ['#8b5cf6','#4f46e5','#0ea5e9','#10b981','#f59e0b','#ef4444','#ec4899','#6b7280'];
+const COLORS  = ['#8b5cf6','#4f46e5','#0ea5e9','#10b981','#f59e0b','#ef4444','#ec4899','#6b7280'];
+const H_COLOR = { recharge: '#818cf8', fixed: '#10b981', floating: '#f59e0b' };
+
+const RECHARGE_DAYS = [
+  { date: '2026-02-13', label: 'Recharge Day' },
+  { date: '2026-05-22', label: 'Recharge Day' },
+  { date: '2026-07-02', label: 'Recharge Day' },
+  { date: '2026-09-04', label: 'Recharge Day' },
+];
+
+const FIXED_HOLIDAYS = [
+  { date: '2026-01-01', label: "New Year's Day" },
+  { date: '2026-05-25', label: 'Memorial Day' },
+  { date: '2026-07-03', label: 'Independence Day (observed)' },
+  { date: '2026-09-07', label: 'Labor Day' },
+  { date: '2026-11-26', label: 'Thanksgiving Holiday' },
+  { date: '2026-11-27', label: 'Thanksgiving Holiday' },
+  { date: '2026-12-24', label: 'Winter Holiday' },
+  { date: '2026-12-25', label: 'Winter Holiday' },
+];
+
+const FLOATING_HOLIDAYS = [
+  { date: '2026-01-02',  label: "New Year's" },
+  { date: '2026-01-19',  label: 'Martin Luther King Jr. Day' },
+  { date: '2026-02-16',  label: "President's Day" },
+  { date: '2026-04-22',  label: 'Earth Day' },
+  { date: '2026-06-19',  label: 'Juneteenth' },
+  { date: '2026-10-12',  label: "Indigenous Peoples' Day" },
+  { date: '2026-11-11',  label: "Veteran's Day" },
+  { date: '2026-11-23',  label: 'Thanksgiving Holiday' },
+  { date: '2026-11-24',  label: 'Thanksgiving Holiday' },
+  { date: '2026-11-25',  label: 'Thanksgiving Holiday' },
+  { date: '2026-12-21',  label: 'Winter Holiday' },
+  { date: '2026-12-22',  label: 'Winter Holiday' },
+  { date: '2026-12-23',  label: 'Winter Holiday' },
+  { date: '2026-12-28',  label: 'Winter Holiday' },
+  { date: '2026-12-29',  label: 'Winter Holiday' },
+  { date: '2026-12-30',  label: 'Winter Holiday' },
+  { date: '2026-12-31',  label: 'Winter Holiday' },
+];
 
 const DEFAULT_LINKS = [
   {
@@ -650,7 +798,39 @@ function updateGreeting() {
   const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
   document.getElementById('greeting').textContent = `${greet} — ${dateStr}`;
 }
+
+function updateNextHoliday() {
+  const el = document.getElementById('next-holiday');
+  if (!el) return;
+  const todayStr = new Date().toLocaleDateString('en-CA');
+
+  const all = [
+    ...RECHARGE_DAYS.map(h    => ({ ...h, type: 'recharge' })),
+    ...FIXED_HOLIDAYS.map(h   => ({ ...h, type: 'fixed'    })),
+    ...FLOATING_HOLIDAYS.map(h => ({ ...h, type: 'floating' })),
+  ].filter(h => h.date >= todayStr).sort((a, b) => a.date.localeCompare(b.date));
+
+  if (!all.length) { el.textContent = ''; return; }
+
+  const next = all[0];
+  const [y, m, d] = next.date.split('-').map(Number);
+  const nextDate  = new Date(y, m - 1, d);
+  const today     = new Date(); today.setHours(0,0,0,0);
+  const daysAway  = Math.round((nextDate - today) / 86400000);
+
+  const dateLabel = nextDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' });
+  const daysLabel = daysAway === 0 ? 'Today' : daysAway === 1 ? 'Tomorrow' : `In ${daysAway} days`;
+  const color     = H_COLOR[next.type];
+
+  el.innerHTML = `
+    <span class="nh-dot" style="background:${color}"></span>
+    <span class="nh-days">${daysLabel}</span>
+    <span class="nh-name">${next.label}</span>
+    <span class="nh-date">· ${dateLabel}</span>`;
+}
+
 updateGreeting();
+updateNextHoliday();
 
 // ── World Clock ──────────────────────────────────────────────
 function isWorkingHours(tz) {
@@ -1120,6 +1300,68 @@ async function loadStock() {
 
 loadStock();
 setInterval(loadStock, 5 * 60 * 1000); // refresh every 5 min
+
+// ── Holidays ─────────────────────────────────────────────────
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS_PER_MONTH_2026 = [31,28,31,30,31,30,31,31,30,31,30,31]; // 2026 is not a leap year
+
+function renderHolidays() {
+  const container = document.getElementById('holidays-body');
+  if (!container) return;
+
+  const todayStr = new Date().toLocaleDateString('en-CA');
+
+  // Build date → holiday lookup
+  const holidayMap = {};
+  RECHARGE_DAYS.forEach(h    => { holidayMap[h.date] = { label: h.label, type: 'recharge' }; });
+  FIXED_HOLIDAYS.forEach(h   => { holidayMap[h.date] = { label: h.label, type: 'fixed'    }; });
+  FLOATING_HOLIDAYS.forEach(h => { holidayMap[h.date] = { label: h.label, type: 'floating' }; });
+
+  const legend = `
+    <div class="hcal-legend">
+      <span class="hcal-legend-item"><span class="hcal-legend-dot" style="background:#818cf8"></span>Recharge Day</span>
+      <span class="hcal-legend-item"><span class="hcal-legend-dot" style="background:#10b981"></span>Fixed Holiday</span>
+      <span class="hcal-legend-item"><span class="hcal-legend-dot" style="background:#f59e0b"></span>Floating Holiday (choose 4)</span>
+    </div>`;
+
+  let monthsHtml = '';
+  for (let m = 0; m < 12; m++) {
+    const firstDow  = new Date(2026, m, 1).getDay(); // 0=Sun
+    const daysInMon = DAYS_PER_MONTH_2026[m];
+
+    let cells = '';
+    for (let i = 0; i < firstDow; i++) cells += '<span class="hcal-day hcal-blank">·</span>';
+
+    for (let d = 1; d <= daysInMon; d++) {
+      const dateStr = `2026-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const holiday = holidayMap[dateStr];
+      const isToday = dateStr === todayStr;
+
+      let cls   = 'hcal-day';
+      let style = '';
+      let tip   = '';
+      if (holiday) {
+        cls  += ' hcal-holiday';
+        style = `background:${H_COLOR[holiday.type]};`;
+        tip   = ` title="${holiday.label}"`;
+      }
+      if (isToday) cls += ' hcal-today';
+
+      cells += `<span class="${cls}" style="${style}"${tip}>${d}</span>`;
+    }
+
+    monthsHtml += `
+      <div class="hcal-month">
+        <div class="hcal-month-name">${MONTH_NAMES[m]}</div>
+        <div class="hcal-dow-row"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+        <div class="hcal-days">${cells}</div>
+      </div>`;
+  }
+
+  container.innerHTML = legend + `<div class="hcal-grid">${monthsHtml}</div>`;
+}
+
+renderHolidays();
 
 // ── Init ─────────────────────────────────────────────────────
 render();
