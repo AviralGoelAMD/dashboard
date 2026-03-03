@@ -122,15 +122,7 @@
     .tile:hover .delete-btn  { display: flex; }
     .delete-btn:hover { background: rgba(220,38,38,0.25); color: #f87171; }
 
-    .tile[draggable="true"] { cursor: grab; }
-    .tile[draggable="true"]:active { cursor: grabbing; }
-    .tile.drag-over {
-      border-color: #4f46e5;
-      box-shadow: 0 0 0 2px #4f46e540;
-    }
-    .tile.dragging { opacity: 0.35; }
-
-    #empty-msg { color: #4b5563; text-align: center; margin-top: 48px; font-size: 0.9rem; }
+#empty-msg { color: #4b5563; text-align: center; margin-top: 48px; font-size: 0.9rem; }
 
     /* ── PR Widget ───────────────────────────── */
     #pr-section {
@@ -519,6 +511,68 @@
       cursor: pointer;
       white-space: nowrap;
     }
+
+    /* ── Secondary Links ─────────────────────────── */
+    #secondary-section {
+      margin-top: 24px;
+    }
+
+    #secondary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .secondary-tile {
+      position: relative;
+      background: #161820;
+      border-radius: 12px;
+      border: 1px solid #22243a;
+      overflow: hidden;
+      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+      opacity: 0.75;
+    }
+    .secondary-tile:hover {
+      transform: translateY(-2px);
+      border-color: #2e3152;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      opacity: 1;
+    }
+    .secondary-tile .tile-accent { height: 2px; width: 100%; }
+    .secondary-tile a {
+      display: block;
+      padding: 16px 14px 14px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .secondary-tile .tile-icon  { font-size: 1.5rem; margin-bottom: 8px; }
+    .secondary-tile .tile-title { font-size: 0.88rem; font-weight: 600; color: #94a3b8; margin-bottom: 3px; }
+    .secondary-tile .tile-url   { font-size: 0.7rem; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #374151;
+      margin-bottom: 12px;
+    }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      margin-top: 40px;
+      padding: 18px 0 8px;
+      border-top: 1px solid #1e2130;
+      text-align: center;
+      font-size: 1rem;
+      color: #64748b;
+    }
+    footer a {
+      color: #4b5563;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    footer a:hover { color: #818cf8; }
   </style>
 </head>
 <body>
@@ -556,7 +610,7 @@
   </div>
 </div>
 
-<!-- PR Widget -->
+<!-- PR Widget (Public) -->
 <div id="pr-section" class="widget">
   <div class="pr-header">
     <div class="widget-title" style="margin-bottom:0" id="pr-widget-title">Open PRs — ROCm/rocm-libraries</div>
@@ -570,6 +624,17 @@
   <div class="widget-title" style="margin-bottom:16px">2026 AMD Holidays</div>
   <div id="holidays-body"></div>
 </div>
+
+<!-- Secondary Links -->
+<div id="secondary-section">
+  <div class="section-label">Other Links</div>
+  <div id="secondary-grid"></div>
+</div>
+
+<!-- Footer -->
+<footer>
+  Made by Aviral Goel &nbsp;·&nbsp; Drop suggestions here: <a href="https://teams.microsoft.com/l/chat/0/0?users=aviral.goel@amd.com" target="_blank" rel="noopener noreferrer">MS Teams</a>
+</footer>
 
 <!-- Modal -->
 <div id="modal-overlay">
@@ -657,6 +722,21 @@ const FLOATING_HOLIDAYS = [
   { date: '2026-12-31',  label: 'Winter Holiday' },
 ];
 
+const SECONDARY_LINKS = [
+  {
+    title: "Cigna Dental Insurance",
+    url:   "https://www.cigna.com/",
+    icon:  "🦷",
+    color: "#0ea5e9"
+  },
+  {
+    title: "Anthem Health Insurance",
+    url:   "https://www.anthem.com/",
+    icon:  "🏥",
+    color: "#10b981"
+  },
+];
+
 const DEFAULT_LINKS = [
   {
     title: "CK Pull Requests",
@@ -666,9 +746,15 @@ const DEFAULT_LINKS = [
   },
   {
     title: "CK Internal Repo",
-    url:   "https://github.com/AMD-ROCm-Internal/composable_kernel",
+    url:   "https://github.com/AMD-ROCm-Internal/rocm-libraries/tree/gfx1250/projects/composablekernel",
     icon:  "📦",
     color: "#4f46e5"
+  },
+  {
+    title: "rocm-libraries-internal",
+    url:   "https://github.com/AMD-ROCm-Internal/rocm-libraries",
+    icon:  "🔒",
+    color: "#8b5cf6"
   },
   {
     title: "rocm-libraries",
@@ -684,7 +770,7 @@ const DEFAULT_LINKS = [
   },
   {
     title: "Jenkins (Internal)",
-    url:   "http://micimaster.amd.com/job/CK-Internal/",
+    url:   "http://micimaster.amd.com/blue/organizations/jenkins/rocm-libraries-folder%2FCK-Internal/activity/",
     icon:  "⚙️",
     color: "#f59e0b"
   },
@@ -758,6 +844,22 @@ let links = JSON.parse(localStorage.getItem('dashboard-links-v7') || 'null');
 if (!links) {
   links = DEFAULT_LINKS;
   localStorage.setItem('dashboard-links-v7', JSON.stringify(links));
+}
+
+// Click counts keyed by URL
+let clickCounts = JSON.parse(localStorage.getItem('dashboard-clicks-v1') || '{}');
+
+function saveClickCounts() {
+  localStorage.setItem('dashboard-clicks-v1', JSON.stringify(clickCounts));
+}
+
+function recordClick(url) {
+  clickCounts[url] = (clickCounts[url] || 0) + 1;
+  saveClickCounts();
+}
+
+function sortedLinks() {
+  return [...links].sort((a, b) => (clickCounts[b.url] || 0) - (clickCounts[a.url] || 0));
 }
 
 let selectedColor = COLORS[0];
@@ -886,7 +988,7 @@ function render() {
   grid.innerHTML = '';
   empty.style.display = links.length ? 'none' : 'block';
 
-  links.forEach((link, i) => {
+  sortedLinks().forEach((link) => {
     const tile = document.createElement('div');
     tile.className = 'tile';
 
@@ -898,6 +1000,7 @@ function render() {
     a.href   = link.url;
     a.target = '_blank';
     a.rel    = 'noopener noreferrer';
+    a.addEventListener('click', () => { recordClick(link.url); });
 
     const icon  = document.createElement('div');
     icon.className   = 'tile-icon';
@@ -919,39 +1022,8 @@ function render() {
     del.title       = 'Remove';
     del.addEventListener('click', (e) => {
       e.preventDefault();
-      links.splice(i, 1);
-      saveLinks();
-      render();
-    });
-
-    // Drag-and-drop
-    tile.setAttribute('draggable', 'true');
-    tile.dataset.index = i;
-
-    tile.addEventListener('dragstart', e => {
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', i);
-      setTimeout(() => tile.classList.add('dragging'), 0);
-    });
-    tile.addEventListener('dragend', () => {
-      tile.classList.remove('dragging');
-      document.querySelectorAll('.tile').forEach(t => t.classList.remove('drag-over'));
-    });
-    tile.addEventListener('dragover', e => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      document.querySelectorAll('.tile').forEach(t => t.classList.remove('drag-over'));
-      tile.classList.add('drag-over');
-    });
-    tile.addEventListener('dragleave', () => tile.classList.remove('drag-over'));
-    tile.addEventListener('drop', e => {
-      e.preventDefault();
-      tile.classList.remove('drag-over');
-      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
-      const toIdx   = parseInt(tile.dataset.index);
-      if (fromIdx === toIdx) return;
-      const moved = links.splice(fromIdx, 1)[0];
-      links.splice(toIdx, 0, moved);
+      const idx = links.findIndex(l => l.url === link.url);
+      if (idx !== -1) links.splice(idx, 1);
       saveLinks();
       render();
     });
@@ -1299,6 +1371,44 @@ function renderHolidays() {
 }
 
 renderHolidays();
+
+// ── Secondary Links ───────────────────────────────────────────
+function renderSecondaryLinks() {
+  const grid = document.getElementById('secondary-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  SECONDARY_LINKS.forEach(link => {
+    const tile = document.createElement('div');
+    tile.className = 'secondary-tile';
+
+    const accent = document.createElement('div');
+    accent.className = 'tile-accent';
+    accent.style.background = link.color;
+
+    const a = document.createElement('a');
+    a.href   = link.url;
+    a.target = '_blank';
+    a.rel    = 'noopener noreferrer';
+
+    const icon  = document.createElement('div');
+    icon.className   = 'tile-icon';
+    icon.textContent = link.icon;
+
+    const title = document.createElement('div');
+    title.className   = 'tile-title';
+    title.textContent = link.title;
+
+    const url = document.createElement('div');
+    url.className   = 'tile-url';
+    url.textContent = link.url.replace(/^https?:\/\//, '').replace(/\?.*$/, '');
+
+    a.append(icon, title, url);
+    tile.append(accent, a);
+    grid.appendChild(tile);
+  });
+}
+
+renderSecondaryLinks();
 
 // ── Init ─────────────────────────────────────────────────────
 render();
