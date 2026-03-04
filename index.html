@@ -672,6 +672,10 @@
       <label>Your GitHub Username</label>
       <input id="inp-ghuser" type="text" placeholder="e.g. AviralGoelAMD">
     </div>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid #2a2d3e;">
+      <p style="font-size:0.78rem;color:#4b5563;margin-bottom:10px;">If the dashboard looks outdated, refresh to get the latest version. Your tiles and settings are preserved.</p>
+      <button id="settings-refresh" style="width:100%;padding:9px;border-radius:8px;border:1px solid #2a2d3e;background:#0f1117;color:#94a3b8;font-size:0.82rem;cursor:pointer;">Check for Updates</button>
+    </div>
     <div class="modal-actions">
       <button class="btn-cancel" id="settings-cancel">Cancel</button>
       <button class="btn-save"   id="settings-save">Save</button>
@@ -1304,6 +1308,17 @@ document.getElementById('settings-save').addEventListener('click', () => {
   localStorage.setItem('dashboard-gh-user', githubUser);
   settingsOverlay.style.display = 'none';
   loadPRs();
+});
+
+document.getElementById('settings-refresh').addEventListener('click', () => {
+  // Fetch index.html bypassing cache, then reload so the browser stores the fresh copy.
+  // localStorage (tiles, clicks, github user) is untouched by a page reload.
+  const btn = document.getElementById('settings-refresh');
+  btn.textContent = 'Refreshing…';
+  btn.disabled = true;
+  fetch(location.pathname + '?_=' + Date.now(), { cache: 'no-store' })
+    .then(() => location.reload())
+    .catch(() => location.reload());
 });
 
 document.getElementById('pr-refresh').addEventListener('click', loadPRs);
